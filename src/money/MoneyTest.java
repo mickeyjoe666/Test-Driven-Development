@@ -1,7 +1,5 @@
 package money;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 
@@ -24,11 +22,6 @@ public class MoneyTest {
 //    public void after() throws Exception {
 //    }
 
-    /**
-    *
-    * Method: equals(Object object)
-    *
-    */
     @Test
     public void testMultiplication() {
         Money five = Money.dollar(5);
@@ -70,12 +63,35 @@ public class MoneyTest {
     }
 
     @Test
-    public void testReduceReturnsSum () {
+    public void testReduceSum () {
+        Expression sum = new Sum(Money.dollar(3), Money.dollar(4));
+        Bank bank = new Bank();
+        Money result = bank.reduce(sum, "USD");
+        assertEquals(Money.dollar(7), result);
+
+    }
+
+    @Test
+    public void testReduceMoney () {
         Bank bank = new Bank();
         Money result = bank.reduce(Money.dollar(1), "USD");
         assertEquals(Money.dollar(1), result);
 
     }
+
+    @Test
+    public void testReduceMoneyDifferenceCurrency () {
+        Bank bank = new Bank();
+        bank.addRate("CHF", "USD", 2);
+        Money result = bank.reduce(Money.franc(2), "USD");
+        assertEquals(Money.dollar(1), result);
+    }
+
+    @Test
+    public void testIdentityRate() {
+        assertEquals(1, new Bank().rate("USD", "USD"));
+    }
+
 
 
 } 
